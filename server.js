@@ -21,8 +21,8 @@ var gameonSecret = (process.env.GAMEON_SECRET || '');
 
 // Room Details
 // Your room's name
-var theRoomName = (process.env.ROOM_NAME || '');
-var fullName = (process.env.FULL_NAME || '');
+var theRoomName = (process.env.ROOM_NAME || 'room101');
+var fullName = (process.env.FULL_NAME || 'Room 101');
 var description = (process.env.DESCRIPTION || 'This room is filled with little JavaScripts running around everywhere and a monster');
 // The hostname of your CF application
 var vcapApplication = (process.env.VCAP_APPLICATION || '{}');
@@ -56,6 +56,14 @@ var registration = {
         "w": "A round door",
     },
 }
+
+//Puzzle data
+var keys = {
+  "unlocked": false,
+  "masterKey": 1997
+}
+
+var activePuzzle;
 
 //Register the service if credentials are given
 register(gameonUID, gameonSecret, registration, logger);
@@ -128,11 +136,41 @@ function parseCommand(conn, target, username, content) {
     {
       sendInventory(conn, target, username, logger)
     }*/
+    else if (content.substr(1, 6) == "trykey") {
+      tryKey(conn, target, username, logger, content.substr(8, 12))
+    }
     else if (content.substr(1, 7) == "examine") {
         sendExamine(conn, target, username, logger);
     } else {
         sendUnknownCommand(conn, target, content, logger);
     }
+}
+
+function tryKey(conn, target, username, logger, testKey) {
+  logger.info("Trying key \"" + testKey + "\"")
+  var sendTarget = target
+  var sendMessageType = "player"
+  var messageObject = {
+    type: "event",
+    bookmark: 2223,
+    content: {
+    }
+  }
+
+  if (keys.unlocked) {
+    messageObject.content[target] = "You have already unlocked the door!"
+  } else if (testKey === keys.masterKey) {
+    messageObject.content[target] = "Congratulations, door unlocked!"
+    keys.unlocked = true
+  } else {
+    messageObject.content[target] = "Your pass key was not correct... try again"
+  }
+
+  var messageToSend = sendMessageType + "," +
+            sendTarget + "," +
+            JSON.stringify(messageObject)
+
+  conn.sendText(messageToSend)
 }
 
 function sayHello(conn, target, username) {
