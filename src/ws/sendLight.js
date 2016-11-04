@@ -10,7 +10,7 @@ var sendLight = function(conn, target, username, logger)
     }
   }
 
-  messageObject.content[target] = "You find a light switch, what are the chances and turn it on. \n The room fills with a bright yellow light."
+  messageObject.content[target] = "You find a light switch, what are the chances and you turn it on. \n The room fills with a bright yellow light."
 
   var messageToSend = sendMessageType + "," +
             sendTarget + "," +

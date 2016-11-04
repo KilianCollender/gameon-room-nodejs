@@ -6,16 +6,16 @@ var parseGoCommand = function(conn, target, username, content, doors, logger)
   logger.info("Player \"" + username + "\" wants to go direction \"" + exitName + "\"")
 
 
-  if(exitName.toUpperCase() === "NORTH"){
+  if(exitName.toLowerCase() === "n"){
     exitId = 'n'
   }
-  else if(exitName.toUpperCase() == "SOUTH"){
+  else if(exitName.toLowerCase() == "s"){
     exitId = 's'
   }
-  else if(exitName.toUpperCase() == "EAST"){
+  else if(exitName.toLowerCase() == "e"){
     exitId = 'e'
   }
-  else if(exitName.toUpperCase() == "WEST"){
+  else if(exitName.toLowerCase() == "w"){
     exitId = 'w'
   }
 
@@ -52,7 +52,7 @@ var parseGoCommand = function(conn, target, username, content, doors, logger)
       bookmark: 5302
     }
 
-    messageObject.content[target] = "There isn't an exit with that name, genius. try using NORTH, SOUTH, EAST or WEST"
+    messageObject.content[target] = "There isn't an exit with that name, genius. try using n, s, w or e"
 
     var messageText = sendMessageType + "," +
               sendTarget + "," +

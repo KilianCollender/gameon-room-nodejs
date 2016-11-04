@@ -13,6 +13,7 @@ var prepareGoodbyeMessage = require('./src/ws/prepareGoodbyeMessage.js');
 var sendInventory = require('./src/ws/sendInventory.js');
 var sendLight = require('./src/ws/sendLight.js');
 var sendRub = require('./src/ws/sendRub.js');
+var sendWish = require('./src/ws/sendWish.js');
 var sendExamine = require('./src/ws/sendExamine.js');
 var parseGoCommand = require('./src/ws/parseGoCommand.js');
 var sendUnknownCommand = require('./src/ws/sendUnknownCommand.js');
@@ -133,6 +134,9 @@ function parseCommand(conn, target, username, content) {
       sendHelp(conn, target, username)
     }
     */
+    else if (content.substr(1, 4) == "wish") {
+        sendWish(conn, target, username, content, logger);
+    }
     else if (content.substr(1, 3) == "rub") {
         sendRub(conn, target, username, content, logger);
     }
@@ -155,9 +159,6 @@ function sayHello(conn, target, username) {
         "name": theRoomName,
         "fullName": fullName,
         "description": description,
-        "commands": {
-            "/light": "Turn on the light"
-        },
         "roomInventory": ["magic lamp", "A wall with glowing writing"]
     }
 
